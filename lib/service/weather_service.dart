@@ -23,16 +23,18 @@ class WeatherService {
       throw Exception('Something went wrong');
     }
   }
-   Future<List<String>> getAutocompleteSuggestions(String query,bool shouldFetchSuggestions) async {
+
+  Future<List<String>> getAutocompleteSuggestions(
+      String query, bool shouldFetchSuggestions) async {
     try {
       if (!shouldFetchSuggestions || query.isEmpty) {
         return [];
       }
 
       final response = await dio.get(
-        'http://api.weatherapi.com/v1/search.json',
+        '$baseUrl/search.json',
         queryParameters: {
-          'key': 'add19fb89abc49d6953165951240601',
+          'key': key,
           'q': query,
         },
       );
@@ -48,5 +50,4 @@ class WeatherService {
       throw Exception('Failed to load suggestions');
     }
   }
-
 }
