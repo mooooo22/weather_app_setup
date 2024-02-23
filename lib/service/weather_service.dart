@@ -16,7 +16,7 @@ class WeatherService {
       return WeatherModel.fromJson(response.data);
     } on DioException catch (e) {
       final String error =
-          e.response?.data['error']['message'] ?? 'Something went wrong';
+          e.response?.data['error']['message'] ?? 'Opps,Something went wrong';
       throw Exception(error);
     } catch (e) {
       log(e.toString());
