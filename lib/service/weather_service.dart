@@ -12,7 +12,6 @@ class WeatherService {
     try {
       Response response =
           await dio.get('$baseUrl/forecast.json?key=$key&q=$cityName&days=1');
-      log(response.data.toString());
       return WeatherModel.fromJson(response.data);
     } on DioException catch (e) {
       final String error =

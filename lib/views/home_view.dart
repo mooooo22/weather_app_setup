@@ -31,10 +31,13 @@ class HomeView extends StatelessWidget {
             if (state is NoWeatherState) {
               return const NoWeatherBody();
             } else if (state is WeatherLoadedState) {
-              return WeatherInfoBody();
+              state.weatherModel;
+              return WeatherInfoBody(
+                weatherModel: state.weatherModel,
+              );
             } else if (state is WeatherFailedState) {
-              return const Center(
-                child: Text('Weather Failed'),
+              return Center(
+                child: Text(state.errorMessage),
               );
             }
             return const Center(
