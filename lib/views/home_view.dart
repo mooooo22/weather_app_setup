@@ -19,7 +19,7 @@ class HomeView extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return const SearchView();
+                  return  SearchView();
                 }));
               },
               icon: const Icon(Icons.search),

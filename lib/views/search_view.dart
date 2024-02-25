@@ -29,30 +29,33 @@ class _SearchViewState extends State<SearchView> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Center(
-                child: TextField(
-                  onChanged: (query) {},
-                  onSubmitted: (value) {
-                    BlocProvider.of<GetWeatherCubit>(context)
-                        .getWeather(city: value);
-                    Navigator.of(context).pop();
-                  },
-                  autofillHints: const [AutofillHints.addressCity],
-                  autocorrect: const bool.fromEnvironment('true'),
-                  decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 32, horizontal: 10.0),
-                    suffixIcon: Icon(Icons.search),
-                    labelText: 'Search',
-                    border: OutlineInputBorder(),
-                    hintFadeDuration: Duration(milliseconds: 100),
-                    hintText: 'Enter city name',
-                  ),
-                ),
+            SizedBox(height: 10),
+            TextField(
+                controller: _searchController,
+              onChanged: (query) {
+                setState(() {
+                  _futureBuilderKey = UniqueKey(); // Change the key
+                  _shouldFetchSuggestions = true;
+                });
+              },
+              onSubmitted: (value) {
+                BlocProvider.of<GetWeatherCubit>(context)
+                    .getWeather(city: value);
+                Navigator.of(context).pop();
+              },
+              autofillHints: const [AutofillHints.addressCity],
+              autocorrect: const bool.fromEnvironment('true'),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 32, horizontal: 10.0),
+                suffixIcon: Icon(Icons.search),
+                labelText: 'Search',
+                border: OutlineInputBorder(),
+                hintFadeDuration: Duration(milliseconds: 100),
+                hintText: 'Enter city name',
               ),
             ),
+            SizedBox(height: 10),
             FutureBuilder(
               key: _futureBuilderKey,
               future: WeatherService(Dio()).getAutocompleteSuggestions(
