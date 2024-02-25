@@ -16,8 +16,7 @@ class GetWeatherCubit extends Cubit<WeatherState> {
       log(weatherModel!.condition);
       emit(WeatherLoadedState(weatherModel: weatherModel!));
     } catch (e) {
-      emit(WeatherFailedState(
-          errorMessage: e.toString().replaceRange(0, 10, '')));
+      emit(WeatherFailedState(originalErrorMessage: e.toString()));
     }
   }
 }

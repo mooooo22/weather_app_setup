@@ -42,11 +42,13 @@ class WeatherApp extends StatelessWidget {
     );
   }
 
-  MaterialColor getThemColor(String? condition) {
+  
+}
+MaterialColor getThemColor(String? condition) {
     switch (condition.toString().trim()) {
-      case 'sunny':
+      case 'Sunny':
       case 'Clear':
-        return Colors.amber;
+        return Colors.orange;
       case 'Partly Cloudy':
       case 'Cloudy':
       case 'Overcast':
@@ -98,4 +100,3 @@ class WeatherApp extends StatelessWidget {
         return Colors.blue;
     }
   }
-}

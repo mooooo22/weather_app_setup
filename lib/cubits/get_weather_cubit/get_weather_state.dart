@@ -10,6 +10,9 @@ class WeatherLoadedState extends WeatherState {
 }
 
 class WeatherFailedState extends WeatherState {
+  final String originalErrorMessage;
   final String errorMessage;
-  WeatherFailedState({required this.errorMessage});
+
+  WeatherFailedState({required this.originalErrorMessage})
+      : errorMessage = originalErrorMessage.substring(10);
 }
