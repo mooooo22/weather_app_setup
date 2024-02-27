@@ -6,22 +6,22 @@ import 'package:weather_app/cubits/get_weather_cubit/get_weather_cubit.dart';
 // ignore: must_be_immutable
 class SearchView extends StatelessWidget {
   SearchView({Key? key}) : super(key: key);
+
   TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus(); // dismiss keyboard
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Search a city'),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 10),
-            Padding(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Search a city'),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 10),
+          Center(
+            // Center the TextField
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: TextField(
                 controller: _searchController,
@@ -47,21 +47,19 @@ class SearchView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10),
-            Expanded(
-              flex: 1,
-              child: BlocBuilder<GetSuggestionCubit, List<String>>(
-                builder: (context, state) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: state.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        tileColor: index % 2 == 0
-                            ? Colors.grey[200]
-                            : Colors.white, // Set custom color based on index
+          ),
+          SizedBox(height: 10),
+          Container(
+            height: 300,
+            child: BlocBuilder<GetSuggestionCubit, List<String>>(
+              builder: (context, state) {
+                return ListView.builder(
+                  itemCount: state.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 56,
+                      color: index % 2 == 0 ? Colors.grey[200] : Colors.white,
+                      child: ListTile(
                         title: Text(state[index]),
                         onTap: () {
                           _searchController.text = state[index];
@@ -71,14 +69,14 @@ class SearchView extends StatelessWidget {
                               .clearSuggestions();
                           Navigator.of(context).pop();
                         },
-                      );
-                    },
-                  );
-                },
-              ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
