@@ -30,29 +30,32 @@ class _SearchViewState extends State<SearchView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 10),
-            TextField(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
                 controller: _searchController,
-              onChanged: (query) {
-                setState(() {
-                  _futureBuilderKey = UniqueKey(); // Change the key
-                  _shouldFetchSuggestions = true;
-                });
-              },
-              onSubmitted: (value) {
-                BlocProvider.of<GetWeatherCubit>(context)
-                    .getWeather(city: value);
-                Navigator.of(context).pop();
-              },
-              autofillHints: const [AutofillHints.addressCity],
-              autocorrect: const bool.fromEnvironment('true'),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 32, horizontal: 10.0),
-                suffixIcon: Icon(Icons.search),
-                labelText: 'Search',
-                border: OutlineInputBorder(),
-                hintFadeDuration: Duration(milliseconds: 100),
-                hintText: 'Enter city name',
+                onChanged: (query) {
+                  setState(() {
+                    _futureBuilderKey = UniqueKey(); // Change the key
+                    _shouldFetchSuggestions = true;
+                  });
+                },
+                onSubmitted: (value) {
+                  BlocProvider.of<GetWeatherCubit>(context)
+                      .getWeather(city: value);
+                  Navigator.of(context).pop();
+                },
+                autofillHints: const [AutofillHints.addressCity],
+                autocorrect: const bool.fromEnvironment('true'),
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 32, horizontal: 10.0),
+                  suffixIcon: Icon(Icons.search),
+                  labelText: 'Search',
+                  border: OutlineInputBorder(),
+                  hintFadeDuration: Duration(milliseconds: 100),
+                  hintText: 'Enter city name',
+                ),
               ),
             ),
             SizedBox(height: 10),
