@@ -48,33 +48,31 @@ class SearchView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            SizedBox(
-              height: 200,
+            Expanded(
+              flex: 1,
               child: BlocBuilder<GetSuggestionCubit, List<String>>(
                 builder: (context, state) {
-                  return Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: state.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          tileColor: index % 2 == 0
-                              ? Colors.grey[200]
-                              : Colors.white, // Set custom color based on index
-                          title: Text(state[index]),
-                          onTap: () {
-                            _searchController.text = state[index];
-                            BlocProvider.of<GetWeatherCubit>(context)
-                                .getWeather(city: state[index]);
-                            BlocProvider.of<GetSuggestionCubit>(context)
-                                .clearSuggestions();
-                            Navigator.of(context).pop();
-                          },
-                        );
-                      },
-                    ),
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: state.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        tileColor: index % 2 == 0
+                            ? Colors.grey[200]
+                            : Colors.white, // Set custom color based on index
+                        title: Text(state[index]),
+                        onTap: () {
+                          _searchController.text = state[index];
+                          BlocProvider.of<GetWeatherCubit>(context)
+                              .getWeather(city: state[index]);
+                          BlocProvider.of<GetSuggestionCubit>(context)
+                              .clearSuggestions();
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
                   );
                 },
               ),
