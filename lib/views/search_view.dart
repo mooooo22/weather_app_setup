@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubits/get_suggestions_cubit/suggestions_cubit.dart';
 import 'package:weather_app/cubits/get_weather_cubit/get_weather_cubit.dart';
 
+// ignore: must_be_immutable
 class SearchView extends StatelessWidget {
   SearchView({Key? key}) : super(key: key);
   TextEditingController _searchController = TextEditingController();
@@ -47,27 +48,36 @@ class SearchView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            BlocBuilder<GetSuggestionCubit, List<String>>(
-              builder: (context, state) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: state.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(state[index]),
-                        onTap: () {
-                          _searchController.text = state[index];
-                          BlocProvider.of<GetWeatherCubit>(context)
-                              .getWeather(city: state[index]);
-                          BlocProvider.of<GetSuggestionCubit>(context)
-                              .clearSuggestions();
-                          Navigator.of(context).pop();
-                        },
-                      );
-                    },
-                  ),
-                );
-              },
+            SizedBox(
+              height: 200,
+              child: BlocBuilder<GetSuggestionCubit, List<String>>(
+                builder: (context, state) {
+                  return Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: state.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          tileColor: index % 2 == 0
+                              ? Colors.grey[200]
+                              : Colors.white, // Set custom color based on index
+                          title: Text(state[index]),
+                          onTap: () {
+                            _searchController.text = state[index];
+                            BlocProvider.of<GetWeatherCubit>(context)
+                                .getWeather(city: state[index]);
+                            BlocProvider.of<GetSuggestionCubit>(context)
+                                .clearSuggestions();
+                            Navigator.of(context).pop();
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
