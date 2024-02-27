@@ -18,6 +18,7 @@ class GetSuggestionCubit extends Cubit<List<String>> {
         suggestions = await weatherService.getAutocompleteSuggestions(query);
       }
       emit(suggestions);
+      
     } on Exception catch (e) {
       emit([]);
       log('Error: $e');
