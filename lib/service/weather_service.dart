@@ -23,10 +23,9 @@ class WeatherService {
     }
   }
 
-  Future<List<String>> getAutocompleteSuggestions(
-      String query, bool shouldFetchSuggestions) async {
+  Future<List<String>> getAutocompleteSuggestions(String query) async {
     try {
-      if (!shouldFetchSuggestions || query.isEmpty) {
+      if (query.isEmpty) {
         return [];
       }
 
@@ -40,6 +39,7 @@ class WeatherService {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
+        log(data.toString());
         return List<String>.from(data.map((item) => item['name']));
       } else {
         throw Exception('Failed to load suggestions');
@@ -49,5 +49,4 @@ class WeatherService {
       throw Exception('Failed to load suggestions');
     }
   }
-
 }

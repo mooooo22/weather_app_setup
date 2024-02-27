@@ -1,21 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/cubits/get_suggestions_cubit/suggestions_cubit.dart';
 import 'package:weather_app/cubits/get_weather_cubit/get_weather_cubit.dart';
-import 'package:weather_app/service/weather_service.dart';
 
-class SearchView extends StatefulWidget {
-  const SearchView({Key? key}) : super(key: key);
-
-  @override
-  State<SearchView> createState() => _SearchViewState();
-}
-
-class _SearchViewState extends State<SearchView> {
+class SearchView extends StatelessWidget {
+  SearchView({Key? key}) : super(key: key);
   TextEditingController _searchController = TextEditingController();
-  Key _futureBuilderKey = UniqueKey(); // Key for FutureBuilder
-  bool _shouldFetchSuggestions =
-      true; // Flag to control whether to fetch suggestions
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -35,10 +25,8 @@ class _SearchViewState extends State<SearchView> {
               child: TextField(
                 controller: _searchController,
                 onChanged: (query) {
-                  setState(() {
-                    _futureBuilderKey = UniqueKey(); // Change the key
-                    _shouldFetchSuggestions = true;
-                  });
+                  BlocProvider.of<GetSuggestionCubit>(context)
+                      .fetchSuggestions(query);
                 },
                 onSubmitted: (value) {
                   BlocProvider.of<GetWeatherCubit>(context)
@@ -59,38 +47,26 @@ class _SearchViewState extends State<SearchView> {
               ),
             ),
             SizedBox(height: 10),
-            FutureBuilder(
-              key: _futureBuilderKey,
-              future: WeatherService(Dio()).getAutocompleteSuggestions(
-                  _searchController.text, _shouldFetchSuggestions),
-              builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  return SizedBox(
-                    height: 200,
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: snapshot.data?.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(snapshot.data![index]),
-                          onTap: () {
-                            setState(() {
-                              _searchController.text = snapshot.data![index];
-                              _shouldFetchSuggestions = false;
-                              _futureBuilderKey = UniqueKey();
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  );
-                }
+            BlocBuilder<GetSuggestionCubit, List<String>>(
+              builder: (context, state) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: state.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(state[index]),
+                        onTap: () {
+                          _searchController.text = state[index];
+                          BlocProvider.of<GetWeatherCubit>(context)
+                              .getWeather(city: state[index]);
+                          BlocProvider.of<GetSuggestionCubit>(context)
+                              .clearSuggestions();
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  ),
+                );
               },
             ),
           ],
